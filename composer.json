@@ -1,0 +1,24 @@
+{
+    "name": "hexlet/code",
+    "license": "MIT",
+    "autoload": {
+        "files": [
+            "src/Differ.php"
+        ],
+        "psr-4": {
+            "Hexlet\\Code\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Anton",
+            "email": "afisak94@gmail.com"
+        }
+    ],
+    "bin": [
+        "bin/gendiff"
+    ],
+    "require": {
+        "docopt/docopt": "^1.0"
+    }
+}
