@@ -6,3 +6,4 @@
 ### Asciinema for .json files
 [![asciicast](https://asciinema.org/a/506425.svg)](https://asciinema.org/a/506425)
 ### Asciinema for .yaml files
+[![asciicast](https://asciinema.org/a/507074.svg)](https://asciinema.org/a/507074)
