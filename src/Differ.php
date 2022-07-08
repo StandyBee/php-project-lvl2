@@ -2,10 +2,17 @@
 
 namespace Differ\Differ;
 
+use Exception;
+
+use function Differ\Parsers\parse;
+
 function genDiff($firstFile, $secondFile)
 {
-    $file1 = json_decode(file_get_contents($firstFile), true);
-    $file2 = json_decode(file_get_contents($secondFile), true);
+    $file1 = parse(getFileExtension($firstFile), getFileContent($firstFile));
+    $file2 = parse(getFileExtension($secondFile), getFileContent($secondFile));
+
+    $file1 = (array) $file1;
+    $file2 = (array) $file2;
 
     $merge = array_merge($file1, $file2);
     $keys = array_keys($merge);
@@ -33,15 +40,28 @@ function genDiff($firstFile, $secondFile)
     return $result;
 }
 
-// $a = '{
-//     "host": "hexlet.io",
-//     "timeout": 50,
-//     "proxy": "123.234.53.22",
-//     "follow": false
-//   }';
-// $b = '{
-//     "timeout": 20,
-//     "verbose": true,
-//     "host": "hexlet.io"
-//   }';
-//   genDiff($a, $b);
+function getFileExtension(string $path): string
+{
+    if (file_exists($path)) {
+        $extension = pathinfo($path, PATHINFO_EXTENSION);
+    } else {
+        throw new Exception("File $path not exists.");
+    }
+
+    return $extension;
+}
+
+function getFileContent(string $path): string
+{
+    if (is_readable($path)) {
+        $fileData = file_get_contents($path);
+    } else {
+        throw new Exception("File $path not exists or not readable.");
+    }
+
+    if (is_string($fileData)) {
+        return $fileData;
+    } else {
+        throw new Exception("File $path content is not in string format.");
+    }
+}
