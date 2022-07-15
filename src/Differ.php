@@ -16,12 +16,12 @@ function genDiff(string $pathToFirstFile, string $pathToSecondFile, string $form
     $structure2 = parse(getFileExtension($pathToSecondFile), getFileContent($pathToSecondFile));
     $diffTree = getDiffTree($structure1, $structure2);
     if ($formatType === 'plain') {
-        return formatPlain($diffTree, $formatType);
+        return formatPlain($diffTree);
     }
     if ($formatType === 'json') {
-        return formatJson($diffTree, $formatType);
+        return formatJson($diffTree);
     }
-    return formatStylish($diffTree, $formatType);
+    return formatStylish($diffTree);
 }
 
 function getDiffTree(object $structure1, object $structure2): array
