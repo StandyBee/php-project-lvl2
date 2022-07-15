@@ -5,39 +5,55 @@ namespace Differ\Differ;
 use Exception;
 
 use function Differ\Parsers\parse;
+use function Differ\Formatters\Stylish\format;
+use function Functional\sort;
 
-function genDiff($firstFile, $secondFile)
+function genDiff(string $pathToFirstFile, string $pathToSecondFile, string $formatType = 'stylish')
 {
-    $file1 = parse(getFileExtension($firstFile), getFileContent($firstFile));
-    $file2 = parse(getFileExtension($secondFile), getFileContent($secondFile));
+    $structure1 = parse(getFileExtension($pathToFirstFile), getFileContent($pathToFirstFile));
+    $structure2 = parse(getFileExtension($pathToSecondFile), getFileContent($pathToSecondFile));
+    $diffTree = getDiffTree($structure1, $structure2);
 
-    $file1 = (array) $file1;
-    $file2 = (array) $file2;
+    return format($diffTree, $formatType);
+}
 
-    $merge = array_merge($file1, $file2);
-    $keys = array_keys($merge);
-    sort($keys);
+function getDiffTree(object $structure1, object $structure2): array
+{
+    $keys = array_keys(array_merge((array) $structure1, (array) $structure2));
+    $sortedKeys = sort($keys, fn($a, $b) => $a <=> $b);
 
-    $mapped = array_map(static function ($key) use ($merge, $file1, $file2) {
-        if (is_bool($merge[$key])) {
-            $merge[$key] = $merge[$key] ? 'true' : 'false';
-        }
-        if (!array_key_exists($key, $file2)) {
-            return '  - ' . $key . ': ' . $merge[$key];
-        }
-        if (!array_key_exists($key, $file1)) {
-            return '  + ' . $key . ': ' . $merge[$key];
-        }
-        if (array_key_exists($key, $file1) && array_key_exists($key, $file2)) {
-            if ($file1[$key] === $file2[$key]) {
-                return '    ' . $key . ': ' . $merge[$key];
+    return array_map(
+        function ($key) use ($structure1, $structure2) {
+            $oldValue = $structure1->$key ?? null;
+            $newValue = $structure2->$key ?? null;
+
+            if (is_object($oldValue) && is_object($newValue)) {
+                return [
+                    'key' => $key,
+                    'type' => 'parent',
+                    'children' => getDiffTree($structure1->$key, $structure2->$key),
+                ];
             }
-            return '  - ' . $key . ': ' . $file1[$key] . "\n" . '  + ' . $key . ': ' . $file2[$key];
-        }
-    }, $keys);
-    $string = implode("\n", $mapped);
-    $result = '{' . "\n" . $string . "\n" . '}';
-    return $result;
+
+            if (!property_exists($structure2, $key)) {
+                $type = 'removed';
+            } elseif (!property_exists($structure1, $key)) {
+                $type = 'added';
+            } elseif ($oldValue !== $newValue) {
+                $type = 'modified';
+            } else {
+                $type = 'unmodified';
+            }
+
+            return [
+                'key' => $key,
+                'type' => $type,
+                'oldValue' => $oldValue,
+                'newValue' => $newValue
+            ];
+        },
+        $sortedKeys
+    );
 }
 
 function getFileExtension(string $path): string
