@@ -4,7 +4,7 @@ namespace Differ\Formatters\Stylish;
 
 use Exception;
 
-function format(array $diffTree): string
+function formatStylish(array $diffTree): string
 {
     $result = makeStylish($diffTree);
 
