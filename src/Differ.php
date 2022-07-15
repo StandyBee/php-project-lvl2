@@ -7,6 +7,7 @@ use Exception;
 use function Differ\Parsers\parse;
 use function Differ\Formatters\Stylish\formatStylish;
 use function Differ\Formatters\Plain\formatPlain;
+use function Differ\Formatters\Json\formatJson;
 use function Functional\sort;
 
 function genDiff(string $pathToFirstFile, string $pathToSecondFile, string $formatType = 'stylish')
@@ -16,6 +17,9 @@ function genDiff(string $pathToFirstFile, string $pathToSecondFile, string $form
     $diffTree = getDiffTree($structure1, $structure2);
     if ($formatType === 'plain') {
         return formatPlain($diffTree, $formatType);
+    }
+    if ($formatType === 'json') {
+        return formatJson($diffTree, $formatType);
     }
     return formatStylish($diffTree, $formatType);
 }
