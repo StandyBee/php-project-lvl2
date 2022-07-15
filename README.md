@@ -7,3 +7,5 @@
 [![asciicast](https://asciinema.org/a/506425.svg)](https://asciinema.org/a/506425)
 ### Asciinema for .yaml files
 [![asciicast](https://asciinema.org/a/507074.svg)](https://asciinema.org/a/507074)
+### Asciinema for complex files
+[![asciicast](https://asciinema.org/a/508720.svg)](https://asciinema.org/a/508720)
