@@ -11,3 +11,5 @@
 [![asciicast](https://asciinema.org/a/508720.svg)](https://asciinema.org/a/508720)
 ### Asciinema with plain format
 [![asciicast](https://asciinema.org/a/508728.svg)](https://asciinema.org/a/508728)
+### Asciinema with json format
+[![asciicast](https://asciinema.org/a/508730.svg)](https://asciinema.org/a/508730)
