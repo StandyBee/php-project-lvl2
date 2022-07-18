@@ -42,7 +42,11 @@ function makePlain(array $diffTree, string $parentKey = ''): array
     );
 }
 
-function toString(mixed $value): string
+/**
+ * @param mixed $value
+ * @return string
+ */
+function toString($value): string
 {
     if (is_bool($value)) {
         return $value ? 'true' : 'false';
