@@ -44,7 +44,6 @@ function makePlain(array $diffTree, string $parentKey = ''): array
 
 /**
  * @param mixed $value
- * @return string
  */
 function toString($value): string
 {
