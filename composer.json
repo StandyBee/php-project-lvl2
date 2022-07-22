@@ -8,11 +8,7 @@
             "src/Formatters/Stylish.php",
             "src/Formatters/Plain.php",
             "src/Formatters/Json.php"
-        ],
-        "psr-4": {
-            "Differ\\": "src",
-            "Differ\\Tests\\": "tests"
-        }
+        ]
     },
     "authors": [
         {
