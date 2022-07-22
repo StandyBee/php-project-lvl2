@@ -9,51 +9,43 @@ use function Differ\Differ\genDiff;
 
 class DifferTest extends TestCase
 {
-    public function testGenDiffJson()
+    public function getFixturePath(string $fileName): string
     {
-        $firstFile = __DIR__ . '/fixtures/file1.json';
-        $secondFile = __DIR__ . '/fixtures/file2.json';
-        $expected = file_get_contents(__DIR__ . '/fixtures/expectedStylish');
-        $this->assertEquals($expected, genDiff($firstFile, $secondFile));
+        return __DIR__ . '/fixtures/' . $fileName;
     }
 
-    public function testGenDiffYaml()
+    /**
+     * @dataProvider additionProvider
+     */
+
+    public function testGenDiff(string $expected, string $pathToFirstFile, string $pathToSecondFile, string $formatType = 'stylish')
     {
-        $firstFile = __DIR__ . '/fixtures/file1.yaml';
-        $secondFile = __DIR__ . '/fixtures/file2.yaml';
-        $expected = file_get_contents(__DIR__ . '/fixtures/expectedStylish');
-        $this->assertEquals($expected, genDiff($firstFile, $secondFile));
+        $this->assertEquals(file_get_contents($expected), genDiff($pathToFirstFile, $pathToSecondFile, $formatType));
     }
 
-    public function testGenDiffComplexYaml()
+    public function additionProvider(): array
     {
-        $firstFile = __DIR__ . '/fixtures/file1Complex.yaml';
-        $secondFile = __DIR__ . '/fixtures/file2Complex.yaml';
-        $expected = file_get_contents(__DIR__ . '/fixtures/expectedStylishComplex');
-        $this->assertEquals($expected, genDiff($firstFile, $secondFile));
-    }
+        $stylishFormat = 'stylish';
+        $plainFormat = 'plain';
+        $jsonFormat = 'json';
 
-    public function testGenDiffComplexJson()
-    {
-        $firstFile = __DIR__ . '/fixtures/file1Complex.json';
-        $secondFile = __DIR__ . '/fixtures/file2Complex.json';
-        $expected = file_get_contents(__DIR__ . '/fixtures/expectedStylishComplex');
-        $this->assertEquals($expected, genDiff($firstFile, $secondFile));
-    }
+        $expectedStylish = $this->getFixturePath("expectedStylish");
+        $expectedPlain = $this->getFixturePath("expectedPlain");
+        $expectedJson = $this->getFixturePath("expectedJson");
+        $pathToFirstFileJson = $this->getFixturePath('file1.json');
+        $pathToSecondFileJson = $this->getFixturePath('file2.json');
+        $pathToFirstFileYaml = $this->getFixturePath('file1.yaml');
+        $pathToSecondFileYaml = $this->getFixturePath('file2.yaml');
 
-    public function testGenDiffPlain()
-    {
-        $firstFile = __DIR__ . '/fixtures/file1Complex.json';
-        $secondFile = __DIR__ . '/fixtures/file2Complex.json';
-        $expected = file_get_contents(__DIR__ . '/fixtures/expectedPlain');
-        $this->assertEquals($expected, genDiff($firstFile, $secondFile, $formatType = 'plain'));
-    }
-
-    public function testGenDiffJsonFormat()
-    {
-        $firstFile = __DIR__ . '/fixtures/file1Complex.json';
-        $secondFile = __DIR__ . '/fixtures/file2Complex.json';
-        $expected = file_get_contents(__DIR__ . '/fixtures/expectedJson');
-        $this->assertEquals($expected, genDiff($firstFile, $secondFile, $formatType = 'json'));
+        return [
+            [$expectedStylish, $pathToFirstFileJson, $pathToSecondFileJson],
+            [$expectedStylish, $pathToFirstFileYaml, $pathToSecondFileYaml],
+            [$expectedStylish, $pathToFirstFileJson, $pathToSecondFileJson, $stylishFormat],
+            [$expectedStylish, $pathToFirstFileYaml, $pathToSecondFileYaml, $stylishFormat],
+            [$expectedPlain, $pathToFirstFileJson, $pathToSecondFileJson, $plainFormat],
+            [$expectedPlain, $pathToFirstFileYaml, $pathToSecondFileYaml, $plainFormat],
+            [$expectedJson, $pathToFirstFileJson, $pathToSecondFileJson, $jsonFormat],
+            [$expectedJson, $pathToFirstFileYaml, $pathToSecondFileYaml, $jsonFormat],
+        ];
     }
 }
