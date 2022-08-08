@@ -17,35 +17,53 @@ class DifferTest extends TestCase
     /**
      * @dataProvider additionProvider
      */
-
-    public function testGenDiff(string $expected, string $pathToFirstFile, string $pathToSecondFile, string $formatType = 'stylish')
+    public function testGenDiffYamlFormat($format): void
     {
-        $this->assertEquals(file_get_contents($expected), genDiff($pathToFirstFile, $pathToSecondFile, $formatType));
+        $expected = __DIR__ . "/fixtures/expectedStylish";
+        $pathToFirstFile = __DIR__ . "/fixtures/file1.{$format}";
+        $pathToSecondFile = __DIR__ . "/fixtures/file2.{$format}";
+
+        $this->assertStringEqualsFile($expected, genDiff($pathToFirstFile, $pathToSecondFile));
+    }
+
+    /**
+     * @dataProvider additionProvider
+     */    
+    public function testGenDiffJsonFormat($format): void
+    {
+        $expected = __DIR__ . "/fixtures/expectedStylish";
+        $pathToFirstFile = __DIR__ . "/fixtures/file1.{$format}";
+        $pathToSecondFile = __DIR__ . "/fixtures/file2.{$format}";
+        $this->assertStringEqualsFile($expected, genDiff($pathToFirstFile, $pathToSecondFile, 'stylish'));
+    }
+
+    /**
+     * @dataProvider additionProvider
+     */
+    public function testGenDiffPlain($format): void
+    {
+        $expected = __DIR__ . "/fixtures/expectedPlain";
+        $pathToFirstFile = __DIR__ . "/fixtures/file1.{$format}";
+        $pathToSecondFile = __DIR__ . "/fixtures/file2.{$format}";
+        $this->assertStringEqualsFile($expected, genDiff($pathToFirstFile, $pathToSecondFile, "plain"));
+    }
+
+    /**
+     * @dataProvider additionProvider
+     */
+    public function testGenDiffJson($format): void
+    {
+        $expected = file_get_contents(__DIR__ . "/fixtures/expectedJson");
+        $pathToFirstFile = __DIR__ . "/fixtures/file1.{$format}";
+        $pathToSecondFile = __DIR__ . "/fixtures/file2.{$format}";
+        $this->assertEquals($expected, genDiff($pathToFirstFile, $pathToSecondFile, "json"));
     }
 
     public function additionProvider(): array
     {
-        $stylishFormat = 'stylish';
-        $plainFormat = 'plain';
-        $jsonFormat = 'json';
-
-        $expectedStylish = $this->getFixturePath("expectedStylish");
-        $expectedPlain = $this->getFixturePath("expectedPlain");
-        $expectedJson = $this->getFixturePath("expectedJson");
-        $pathToFirstFileJson = $this->getFixturePath('file1.json');
-        $pathToSecondFileJson = $this->getFixturePath('file2.json');
-        $pathToFirstFileYaml = $this->getFixturePath('file1.yaml');
-        $pathToSecondFileYaml = $this->getFixturePath('file2.yaml');
-
         return [
-            [$expectedStylish, $pathToFirstFileJson, $pathToSecondFileJson],
-            [$expectedStylish, $pathToFirstFileYaml, $pathToSecondFileYaml],
-            [$expectedStylish, $pathToFirstFileJson, $pathToSecondFileJson, $stylishFormat],
-            [$expectedStylish, $pathToFirstFileYaml, $pathToSecondFileYaml, $stylishFormat],
-            [$expectedPlain, $pathToFirstFileJson, $pathToSecondFileJson, $plainFormat],
-            [$expectedPlain, $pathToFirstFileYaml, $pathToSecondFileYaml, $plainFormat],
-            [$expectedJson, $pathToFirstFileJson, $pathToSecondFileJson, $jsonFormat],
-            [$expectedJson, $pathToFirstFileYaml, $pathToSecondFileYaml, $jsonFormat],
+            ['json'],
+            ['yaml']
         ];
     }
 }
