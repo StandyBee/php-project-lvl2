@@ -28,7 +28,7 @@ class DifferTest extends TestCase
 
     /**
      * @dataProvider additionProvider
-     */    
+     */
     public function testGenDiffJsonFormat($format): void
     {
         $expected = __DIR__ . "/fixtures/expectedStylish";
