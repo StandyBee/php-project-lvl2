@@ -56,7 +56,7 @@ function toString($value): string
     }
 
     if (is_string($value)) {
-        return "'$value'";
+        return "'{$value}'";
     }
 
     if (is_numeric($value)) {
